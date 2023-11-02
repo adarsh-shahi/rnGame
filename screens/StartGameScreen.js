@@ -1,7 +1,10 @@
-import { Alert, StyleSheet, TextInput, View } from "react-native";
+import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { useState } from "react";
 import colors from "../constants/colors";
+import Title from "../components/ui/Title";
+import Card from "../components/ui/Card";
+import InstructionText from "../components/ui/InstructionText";
 
 export default function StartGameScreen({ onPickedNumber }) {
 	const [enteredNumber, setEnteredNumber] = useState("");
@@ -25,31 +28,42 @@ export default function StartGameScreen({ onPickedNumber }) {
 		onPickedNumber(numText);
 	};
 	return (
-		<View style={styles.inputContainer}>
-			<TextInput
-				style={styles.numberInput}
-				maxLength={2}
-				keyboardType="number-pad"
-				autoCapitalize="none"
-				autoCorrect={false}
-				value={enteredNumber}
-				onChangeText={handleNumberChange}
-			/>
-			<View style={styles.buttonsContainer}>
-				<View style={styles.buttonContainer}>
-					<PrimaryButton onPress={setEnteredNumber.bind(this, "")}>
-						Reset
-					</PrimaryButton>
+		<View style={styles.rootContainer}>
+			<Title>Guess My Number</Title>
+			<Card>
+				<InstructionText>Enter a Number</InstructionText>
+				<TextInput
+					style={styles.numberInput}
+					maxLength={2}
+					keyboardType="number-pad"
+					autoCapitalize="none"
+					autoCorrect={false}
+					value={enteredNumber}
+					onChangeText={handleNumberChange}
+				/>
+				<View style={styles.buttonsContainer}>
+					<View style={styles.buttonContainer}>
+						<PrimaryButton onPress={setEnteredNumber.bind(this, "")}>
+							Reset
+						</PrimaryButton>
+					</View>
+					<View style={styles.buttonContainer}>
+						<PrimaryButton onPress={handleConfirmedNumber}>
+							Confirm
+						</PrimaryButton>
+					</View>
 				</View>
-				<View style={styles.buttonContainer}>
-					<PrimaryButton onPress={handleConfirmedNumber}>Confirm</PrimaryButton>
-				</View>
-			</View>
+			</Card>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
+	rootContainer: {
+		flex: 1,
+		marginTop: 100,
+		alignItems: "center",
+	},
 	inputContainer: {
 		justifyContent: "center",
 		alignItems: "center",

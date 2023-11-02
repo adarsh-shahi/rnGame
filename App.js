@@ -5,24 +5,46 @@ import { useState } from "react";
 import GameScreen from "./screens/GameScreen";
 import colors from "./constants/colors";
 import GameOverScreen from "./screens/GameOverScreem";
+import { useFonts } from "expo-font";
+import AppLoading from "expo-app-loading";
 
 export default function App() {
 	const [userNumber, setUserNumber] = useState();
 	const [isGameOver, setIsGameOver] = useState(true);
+	const [guessCount, setGuessCount] = useState(0);
+
+	const [fontsLoaded] = useFonts({
+		"open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+		"open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+	});
+
+	if (!fontsLoaded) return <AppLoading />;
 
 	const pickedNumber = (num) => {
 		setUserNumber(num);
 		setIsGameOver(false);
 	};
 
-	const handleGameOver = () => {
+	const handleStartNewGame = () => {
+		setUserNumber(null);
+		setGuessCount(0);
+	};
+
+	const handleGameOver = (numOfRounds) => {
+		setGuessCount(numOfRounds);
 		setIsGameOver(true);
 	};
 	let screen = <StartGameScreen onPickedNumber={pickedNumber} />;
 	if (userNumber)
 		screen = <GameScreen userNumber={userNumber} onGameOver={handleGameOver} />;
 	if (isGameOver && userNumber) {
-		screen = <GameOverScreen />;
+		screen = (
+			<GameOverScreen
+				userNum={userNumber}
+				roundsNum={guessCount}
+				onStartNewGame={handleStartNewGame}
+			/>
+		);
 	}
 
 	return (
